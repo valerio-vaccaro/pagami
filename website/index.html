@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="Valerio Vaccaro">
+  <title>PAGAMI</title>
+  <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/small-business.css" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="https://pagami.org">PAGAMI.ORG</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="https://pagami.org">Home<span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://github.com/valerio-vaccaro/pagami">Sources</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+
+    <div class="row align-items-center my-5">
+      <div class="col-lg-5">
+        <img class="img-fluid rounded mb-4 mb-lg-0" src="img/board.gif" alt="">
+      </div>
+      <div class="col-lg-7">
+        <h1 class="font-weight-light">PAGAMI</h1>
+        <p>Check your Bitcoin addresses, show first unused address and calculate your balance.</p>
+        <a class="btn btn-primary" href="https://github.com/valerio-vaccaro/pagami">Check on GitHub!</a>
+      </div>
+    </div>
+
+    <div class="card text-white bg-secondary my-5 py-4 text-center">
+      <div class="card-body">
+        <h2 class="text-white">How does it works?</h2>
+        <p class="text-white m-0">Buy the hardware, flash the firmware and create configuration files on a micro sd.</p></br>
+        <p class="text-white m-0">When you will turn on the board, the configuration will be loaded and the board will connect to the WIFI. Using the explorer blockstream.info the board will retrieve information for each address. In the end will show the first unused address and balance.</p></br>
+        <img src="img/display.png" width="70%" ></img></br>
+        <p class="text-white m-0">Now you can turn off the board, the e.paper display will show you all this information without battery or USB attached. Or you can wait 60 seconds and the board will check another time all your addresses.</p></br>
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="col-md-4 mb-5">
+        <div class="card h-100">
+          <div class="card-body">
+            <h2 class="card-title">1. Buy hardware</h2>
+            <p class="card-text">You will need an ESP32 module with a 2.13 e-paper display. You can find on AliExpress for around 15$.</p>
+          </div>
+          <div class="card-footer">
+            <a href="https://github.com/valerio-vaccaro/pagami/doc/1.buy.md" class="btn btn-primary btn-sm">More Info</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 mb-5">
+        <div class="card h-100">
+          <div class="card-body">
+            <h2 class="card-title">2. Flashing firmware</h2>
+            <p class="card-text">Open pagami/pagami.ino with Arduino IDE, configure for ESP32 board, select port and flash the firmware.</p>
+          </div>
+          <div class="card-footer">
+            <a href="https://github.com/valerio-vaccaro/pagami/doc/2.flash.md" class="btn btn-primary btn-sm">More Info</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 mb-5">
+        <div class="card h-100">
+          <div class="card-body">
+            <h2 class="card-title">3. Configure board</h2>
+            <p class="card-text">You can configure your board using a microSD with textual files.</p>
+          </div>
+          <div class="card-footer">
+            <a href="https://github.com/valerio-vaccaro/pagami/doc/3.configure.md" class="btn btn-primary btn-sm">More Info</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <footer class="py-5 bg-dark">
+    <div class="container">
+      <p class="m-0 text-center text-white">Copyright &copy; Valerio Vaccaro 2020</p>
+    </div>
+  </footer>
+
+  <script src="jquery/jquery.min.js"></script>
+  <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

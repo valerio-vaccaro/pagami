@@ -1,0 +1,4 @@
+{
+    "ssid": "MyNet",
+    "password": "MyPassword"
+}

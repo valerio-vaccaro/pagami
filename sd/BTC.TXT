@@ -1,0 +1,14 @@
+{
+    "network": "testnet",
+    "addresses": [
+        "2N1pCrWruP2M95fN348zH6cVmspwsLoUZZR",
+        "2NFgATehGMTRWsDb5tk8oW8Uc9zDK7vF2ou",
+        "2MwMD7vzKgwxkiKbLp7XkTexvr6CopKHRpG",
+        "2N1uxt8bxddDN38asChPQz4AQFmUagMGaDr",
+        "2NDyuZBuW1ekuM4NErJMrw67GBuNge7vFWc",
+        "2NBNj7fwWSGwkuN12mv3J4mqKALcUcpxepc",
+        "2NEgQ7jNY93KcaAkFdb64TXGKRxYca2Vx4R",
+        "2MwJmVTZwzf1h4wQ2vuGdDNMDtUZ8DzLf7x",
+        "2MxfhLVhTesEmszK61Eyh4XLUwmmNqUN4An"
+    ]
+}
