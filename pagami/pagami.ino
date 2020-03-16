@@ -202,6 +202,7 @@ void loop() {
   snprintf(satoshi_str, 20, "%llu sat.", satoshi);
   char mem_satoshi_str[20];
   snprintf(mem_satoshi_str, 20, "M %llu sat.", mem_satoshi);
+  unused_address = "bitcoin:" + unused_address; // Bitcoin URI 
   QR((char *)unused_address.c_str(), network_str, (char *)progress.c_str(), satoshi_str, mem_satoshi_str);
   sound_ok();
   esp_sleep_enable_timer_wakeup(60 * 1000000);
