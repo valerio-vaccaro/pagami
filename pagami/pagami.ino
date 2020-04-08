@@ -10,6 +10,9 @@
 File fsroot;
 File logfile;
 
+bool sound = false;
+bool show_balance = false;
+
 void setup() {
   // Start Serial
   Serial.begin(115200);
@@ -71,6 +74,8 @@ void setup() {
   // Start WiFi Routine
   String ssid = root["ssid"];
   String password = root["password"];
+  sound = root["sound"];
+  show_balance = root["show_balance"];
   WiFi.begin(ssid.c_str(), password.c_str());
   while (WiFi.status() != WL_CONNECTED) {
     delay(1000);
@@ -203,8 +208,9 @@ void loop() {
   char mem_satoshi_str[20];
   snprintf(mem_satoshi_str, 20, "M %llu sat.", mem_satoshi);
   unused_address = "bitcoin:" + unused_address; // Bitcoin URI 
-  QR((char *)unused_address.c_str(), network_str, (char *)progress.c_str(), satoshi_str, mem_satoshi_str);
-  sound_ok();
+  if (show_balance) QR((char *)unused_address.c_str(), network_str, (char *)progress.c_str(), satoshi_str, mem_satoshi_str);
+  else QR((char *)unused_address.c_str(), network_str, (char *)progress.c_str(), "-", "-");
+  if (sound) sound_ok();
   esp_sleep_enable_timer_wakeup(60 * 1000000);
   esp_deep_sleep_start();
 }

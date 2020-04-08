@@ -1,4 +1,6 @@
 {
     "ssid": "MyNet",
-    "password": "MyPassword"
+    "password": "MyPassword",
+    "sound": true,
+    "show_balance": true
 }
