@@ -152,7 +152,7 @@ void loop() {
 
       StaticJsonDocument<400> http_root;
       DeserializationError http_error = deserializeJson(http_root, response);
-      if (error) {
+      if (http_error) {
         Serial.println(F("Failed to read json from block explorer"));
       }
 
@@ -182,7 +182,7 @@ void loop() {
       Serial.print(" bal_tot_mem_str ");
       Serial.print(bal_tot_mem_str);
       Serial.println("");
- 
+
       satoshi += bal_tot_cha;
       mem_satoshi += bal_tot_mem;
 
@@ -207,7 +207,7 @@ void loop() {
   snprintf(satoshi_str, 20, "%llu sat.", satoshi);
   char mem_satoshi_str[20];
   snprintf(mem_satoshi_str, 20, "M %llu sat.", mem_satoshi);
-  unused_address = "bitcoin:" + unused_address; // Bitcoin URI 
+  unused_address = "bitcoin:" + unused_address; // Bitcoin URI
   if (show_balance) QR((char *)unused_address.c_str(), network_str, (char *)progress.c_str(), satoshi_str, mem_satoshi_str);
   else QR((char *)unused_address.c_str(), network_str, (char *)progress.c_str(), "-", "-");
   if (sound) sound_ok();
