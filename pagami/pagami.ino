@@ -36,10 +36,13 @@ void setup() {
     Serial.println("Failed to mount sd");
     Message("", "SDCard", "MOUNT FAIL", "");
     esp_sleep_enable_timer_wakeup(60 * 1000000);
+    esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_SLOW_MEM, ESP_PD_OPTION_OFF);
+    esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_FAST_MEM, ESP_PD_OPTION_OFF);
+    esp_sleep_pd_config(ESP_PD_DOMAIN_MAX, ESP_PD_OPTION_OFF);
     esp_deep_sleep_start();
   }
 
-  Message("", "SDCard OK", "", "");
+  //Message("", "SDCard OK", "", "");
 
   File myFile;
 
@@ -49,6 +52,9 @@ void setup() {
     Serial.println("Error opening WIFI.TXT");
     Message("", "WIFI.TXT", "Error opening", "");
     esp_sleep_enable_timer_wakeup(60 * 1000000);
+    esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_SLOW_MEM, ESP_PD_OPTION_OFF);
+    esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_FAST_MEM, ESP_PD_OPTION_OFF);
+    esp_sleep_pd_config(ESP_PD_DOMAIN_MAX, ESP_PD_OPTION_OFF);
     esp_deep_sleep_start();
   }
 
@@ -60,12 +66,27 @@ void setup() {
     Serial.println("Failed to read file, using default configuration");
     Message("", "Read file", "Failed", "");
     esp_sleep_enable_timer_wakeup(60 * 1000000);
+    esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_SLOW_MEM, ESP_PD_OPTION_OFF);
+    esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_FAST_MEM, ESP_PD_OPTION_OFF);
+    esp_sleep_pd_config(ESP_PD_DOMAIN_MAX, ESP_PD_OPTION_OFF);
     esp_deep_sleep_start();
   }
 
   if (!root.containsKey("ssid") || !root.containsKey("password")) {
     Message("", "Missing ssid", "or password", "");
     esp_sleep_enable_timer_wakeup(60 * 1000000);
+    esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_SLOW_MEM, ESP_PD_OPTION_OFF);
+    esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_FAST_MEM, ESP_PD_OPTION_OFF);
+    esp_sleep_pd_config(ESP_PD_DOMAIN_MAX, ESP_PD_OPTION_OFF);
+    esp_deep_sleep_start();
+  }
+
+    if (!root.containsKey("sound") || !root.containsKey("show_balance")) {
+    Message("", "Missing sound", "or show_balance", "");
+    esp_sleep_enable_timer_wakeup(60 * 1000000);
+    esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_SLOW_MEM, ESP_PD_OPTION_OFF);
+    esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_FAST_MEM, ESP_PD_OPTION_OFF);
+    esp_sleep_pd_config(ESP_PD_DOMAIN_MAX, ESP_PD_OPTION_OFF);
     esp_deep_sleep_start();
   }
 
@@ -77,14 +98,21 @@ void setup() {
   String password = root["password"];
   sound = root["sound"];
   show_balance = root["show_balance"];
+  WiFi.disconnect(true);
+  delay(100);
   WiFi.begin(ssid.c_str(), password.c_str());
+  delay(100);
   while (WiFi.status() != WL_CONNECTED) {
-    delay(1000);
+    delay(500);
     Serial.print(".");
   }
+  Serial.print("Connected, IP address: ");
+  Serial.println(WiFi.localIP());
   // Set Cert
   client.setCACert(le_root_ca);
   Serial.println("Setup done");
+  // Set proxy
+  //client.connect(proxy_host, proxy_port))
 
   // time
   ntptime_init();
@@ -100,6 +128,9 @@ void loop() {
     Serial.println("Error opening BTC.TXT");
     Message("", "BTC.TXT", "Error opening", "");
     esp_sleep_enable_timer_wakeup(60 * 1000000);
+    esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_SLOW_MEM, ESP_PD_OPTION_OFF);
+    esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_FAST_MEM, ESP_PD_OPTION_OFF);
+    esp_sleep_pd_config(ESP_PD_DOMAIN_MAX, ESP_PD_OPTION_OFF);
     esp_deep_sleep_start();
   }
 
@@ -108,11 +139,17 @@ void loop() {
   if (error) {
     Serial.println(F("Failed to read file, using default configuration"));
     esp_sleep_enable_timer_wakeup(60 * 1000000);
+    esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_SLOW_MEM, ESP_PD_OPTION_OFF);
+    esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_FAST_MEM, ESP_PD_OPTION_OFF);
+    esp_sleep_pd_config(ESP_PD_DOMAIN_MAX, ESP_PD_OPTION_OFF);
     esp_deep_sleep_start();
   }
   if (!root.containsKey("network") || !root.containsKey("addresses")) {
     Message("", "Missing network", "or addresses", "");
     esp_sleep_enable_timer_wakeup(60 * 1000000);
+    esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_SLOW_MEM, ESP_PD_OPTION_OFF);
+    esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_FAST_MEM, ESP_PD_OPTION_OFF);
+    esp_sleep_pd_config(ESP_PD_DOMAIN_MAX, ESP_PD_OPTION_OFF);
     esp_deep_sleep_start();
   }
 
@@ -132,8 +169,9 @@ void loop() {
   else
     snprintf(network_str, 20, "NET: MAINNET");
 
-  Message("", (char*)network_str, "Update balance", "");
-
+  Message("", (char*)network_str, "Updating balance", "");
+  
+  HTTPClient http;
   for (JsonVariant v : array) {
     myaddress = v.as<String>();
 
@@ -143,7 +181,6 @@ void loop() {
       snprintf(buf, 100, "https://blockstream.info/api/address/%s", myaddress.c_str());
     Serial.println(buf);
 
-    HTTPClient http;
     http.begin(buf);
     int httpResponseCode = http.GET();
     if (httpResponseCode > 0) {
@@ -157,9 +194,9 @@ void loop() {
         Serial.println(F("Failed to read json from block explorer"));
       }
 
-      byte tx_num_cha = http_root["chain_stats"]["funded_txo_count"].as<int>();
-      byte tx_num_mem = http_root["mempool_stats"]["funded_txo_count"].as<int>();
-      byte tx_num_tot = tx_num_cha + tx_num_mem;
+      int tx_num_cha = http_root["chain_stats"]["funded_txo_count"].as<int>();
+      int tx_num_mem = http_root["mempool_stats"]["funded_txo_count"].as<int>();
+      int tx_num_tot = tx_num_cha + tx_num_mem;
       Serial.print(" tx_num_cha ");
       Serial.print(tx_num_cha);
       Serial.print(" tx_num_mem ");
@@ -167,17 +204,17 @@ void loop() {
       Serial.print(" tx_num_tot ");
       Serial.print(tx_num_tot);
 
-      long long bal_in_cha = http_root["chain_stats"]["funded_txo_sum"];
-      long long bal_out_cha = http_root["chain_stats"]["spent_txo_sum"];
-      long long bal_tot_cha = bal_in_cha - bal_out_cha;
+      unsigned long long   bal_in_cha = http_root["chain_stats"]["funded_txo_sum"].as<unsigned long long>();
+      unsigned long long   bal_out_cha = http_root["chain_stats"]["spent_txo_sum"].as<unsigned long long>();
+      unsigned long long   bal_tot_cha = bal_in_cha - bal_out_cha;
       char bal_tot_cha_str[20];
       snprintf(bal_tot_cha_str, 20, "%llu", bal_tot_cha);
       Serial.print(" bal_tot_cha_str ");
       Serial.print(bal_tot_cha_str);
 
-      long long bal_in_mem = http_root["mempool_stats"]["funded_txo_sum"];
-      long long bal_out_mem = http_root["mempool_stats"]["spent_txo_sum"];
-      long long bal_tot_mem = bal_in_mem - bal_out_mem;
+      unsigned long long  bal_in_mem = http_root["mempool_stats"]["funded_txo_sum"].as<unsigned long long>();
+      unsigned long long  bal_out_mem = http_root["mempool_stats"]["spent_txo_sum"].as<unsigned long long>();
+      unsigned long long  bal_tot_mem = bal_in_mem - bal_out_mem;
       char bal_tot_mem_str[20];
       snprintf(bal_tot_mem_str, 20, "%llu", bal_tot_mem);
       Serial.print(" bal_tot_mem_str ");
@@ -186,6 +223,13 @@ void loop() {
 
       satoshi += bal_tot_cha;
       mem_satoshi += bal_tot_mem;
+
+      char satoshi_str[20];
+      snprintf(satoshi_str, 20, "%llu sat.", satoshi);
+      char mem_satoshi_str[20];
+      snprintf(mem_satoshi_str, 20, "M %llu sat.", mem_satoshi);
+      Serial.println(satoshi_str);
+      Serial.println(mem_satoshi_str);
 
       if (found == false && tx_num_tot == 0) {
         found = true;
@@ -197,8 +241,13 @@ void loop() {
       }
 
     } else {
-      Serial.print("Error on sending POST: ");
+      Serial.print("Error on GET: ");
       Serial.println(httpResponseCode);
+      esp_sleep_enable_timer_wakeup(1 * 1000000);
+      esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_SLOW_MEM, ESP_PD_OPTION_OFF);
+      esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_FAST_MEM, ESP_PD_OPTION_OFF);
+      esp_sleep_pd_config(ESP_PD_DOMAIN_MAX, ESP_PD_OPTION_OFF);
+      esp_deep_sleep_start();
     }
     http.end();  //Free resources
   }
@@ -213,5 +262,8 @@ void loop() {
   else QR((char *)unused_address.c_str(), network_str, (char *)progress.c_str(), "-", "-");
   if (sound) sound_ok();
   esp_sleep_enable_timer_wakeup(60 * 1000000);
+  esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_SLOW_MEM, ESP_PD_OPTION_OFF);
+  esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_FAST_MEM, ESP_PD_OPTION_OFF);
+  esp_sleep_pd_config(ESP_PD_DOMAIN_MAX, ESP_PD_OPTION_OFF);
   esp_deep_sleep_start();
 }
