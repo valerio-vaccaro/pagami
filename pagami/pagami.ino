@@ -164,7 +164,7 @@ void loop() {
   long long mem_satoshi = 0;
 
   char network_str[20];
-  if (network_ = 'testnet')
+  if (network_.equalsIgnoreCase("testnet"))
     snprintf(network_str, 20, "NET: TESTNET");
   else
     snprintf(network_str, 20, "NET: MAINNET");
@@ -175,7 +175,7 @@ void loop() {
   for (JsonVariant v : array) {
     myaddress = v.as<String>();
 
-    if (network_ = 'testnet')
+    if (network_.equalsIgnoreCase("testnet"))
       snprintf(buf, 100, "https://blockstream.info/testnet/api/address/%s", myaddress.c_str());
     else
       snprintf(buf, 100, "https://blockstream.info/api/address/%s", myaddress.c_str());
