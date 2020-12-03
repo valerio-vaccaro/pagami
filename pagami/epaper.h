@@ -1,6 +1,7 @@
 // Screen Info
 #include <GxEPD.h>
-#include <GxGDE0213B1/GxGDE0213B1.h>      // 2.13" b/w
+//#include <GxGDE0213B1/GxGDE0213B1.h>      // 2.13" b/w
+#include <GxGDEH0213B73/GxGDEH0213B73.h>    // ttgo t5
 #include <GxIO/GxIO_SPI/GxIO_SPI.h>
 #include <GxIO/GxIO.h>
 
