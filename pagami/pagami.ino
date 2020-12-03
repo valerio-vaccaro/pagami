@@ -36,9 +36,6 @@ void setup() {
     Serial.println("Failed to mount sd");
     Message("", "SDCard", "MOUNT FAIL", "");
     esp_sleep_enable_timer_wakeup(60 * 1000000);
-    esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_SLOW_MEM, ESP_PD_OPTION_OFF);
-    esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_FAST_MEM, ESP_PD_OPTION_OFF);
-    esp_sleep_pd_config(ESP_PD_DOMAIN_MAX, ESP_PD_OPTION_OFF);
     esp_deep_sleep_start();
   }
 
@@ -52,9 +49,6 @@ void setup() {
     Serial.println("Error opening WIFI.TXT");
     Message("", "WIFI.TXT", "Error opening", "");
     esp_sleep_enable_timer_wakeup(60 * 1000000);
-    esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_SLOW_MEM, ESP_PD_OPTION_OFF);
-    esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_FAST_MEM, ESP_PD_OPTION_OFF);
-    esp_sleep_pd_config(ESP_PD_DOMAIN_MAX, ESP_PD_OPTION_OFF);
     esp_deep_sleep_start();
   }
 
@@ -66,27 +60,18 @@ void setup() {
     Serial.println("Failed to read file, using default configuration");
     Message("", "Read file", "Failed", "");
     esp_sleep_enable_timer_wakeup(60 * 1000000);
-    esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_SLOW_MEM, ESP_PD_OPTION_OFF);
-    esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_FAST_MEM, ESP_PD_OPTION_OFF);
-    esp_sleep_pd_config(ESP_PD_DOMAIN_MAX, ESP_PD_OPTION_OFF);
     esp_deep_sleep_start();
   }
 
   if (!root.containsKey("ssid") || !root.containsKey("password")) {
     Message("", "Missing ssid", "or password", "");
     esp_sleep_enable_timer_wakeup(60 * 1000000);
-    esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_SLOW_MEM, ESP_PD_OPTION_OFF);
-    esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_FAST_MEM, ESP_PD_OPTION_OFF);
-    esp_sleep_pd_config(ESP_PD_DOMAIN_MAX, ESP_PD_OPTION_OFF);
     esp_deep_sleep_start();
   }
 
     if (!root.containsKey("sound") || !root.containsKey("show_balance")) {
     Message("", "Missing sound", "or show_balance", "");
     esp_sleep_enable_timer_wakeup(60 * 1000000);
-    esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_SLOW_MEM, ESP_PD_OPTION_OFF);
-    esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_FAST_MEM, ESP_PD_OPTION_OFF);
-    esp_sleep_pd_config(ESP_PD_DOMAIN_MAX, ESP_PD_OPTION_OFF);
     esp_deep_sleep_start();
   }
 
@@ -128,9 +113,6 @@ void loop() {
     Serial.println("Error opening BTC.TXT");
     Message("", "BTC.TXT", "Error opening", "");
     esp_sleep_enable_timer_wakeup(60 * 1000000);
-    esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_SLOW_MEM, ESP_PD_OPTION_OFF);
-    esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_FAST_MEM, ESP_PD_OPTION_OFF);
-    esp_sleep_pd_config(ESP_PD_DOMAIN_MAX, ESP_PD_OPTION_OFF);
     esp_deep_sleep_start();
   }
 
@@ -139,17 +121,11 @@ void loop() {
   if (error) {
     Serial.println(F("Failed to read file, using default configuration"));
     esp_sleep_enable_timer_wakeup(60 * 1000000);
-    esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_SLOW_MEM, ESP_PD_OPTION_OFF);
-    esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_FAST_MEM, ESP_PD_OPTION_OFF);
-    esp_sleep_pd_config(ESP_PD_DOMAIN_MAX, ESP_PD_OPTION_OFF);
     esp_deep_sleep_start();
   }
   if (!root.containsKey("network") || !root.containsKey("addresses")) {
     Message("", "Missing network", "or addresses", "");
     esp_sleep_enable_timer_wakeup(60 * 1000000);
-    esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_SLOW_MEM, ESP_PD_OPTION_OFF);
-    esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_FAST_MEM, ESP_PD_OPTION_OFF);
-    esp_sleep_pd_config(ESP_PD_DOMAIN_MAX, ESP_PD_OPTION_OFF);
     esp_deep_sleep_start();
   }
 
@@ -224,13 +200,6 @@ void loop() {
       satoshi += bal_tot_cha;
       mem_satoshi += bal_tot_mem;
 
-      char satoshi_str[20];
-      snprintf(satoshi_str, 20, "%llu sat.", satoshi);
-      char mem_satoshi_str[20];
-      snprintf(mem_satoshi_str, 20, "M %llu sat.", mem_satoshi);
-      Serial.println(satoshi_str);
-      Serial.println(mem_satoshi_str);
-
       if (found == false && tx_num_tot == 0) {
         found = true;
         unused_address = myaddress;
@@ -244,9 +213,6 @@ void loop() {
       Serial.print("Error on GET: ");
       Serial.println(httpResponseCode);
       esp_sleep_enable_timer_wakeup(1 * 1000000);
-      esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_SLOW_MEM, ESP_PD_OPTION_OFF);
-      esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_FAST_MEM, ESP_PD_OPTION_OFF);
-      esp_sleep_pd_config(ESP_PD_DOMAIN_MAX, ESP_PD_OPTION_OFF);
       esp_deep_sleep_start();
     }
     http.end();  //Free resources
@@ -262,8 +228,5 @@ void loop() {
   else QR((char *)unused_address.c_str(), network_str, (char *)progress.c_str(), "-", "-");
   if (sound) sound_ok();
   esp_sleep_enable_timer_wakeup(60 * 1000000);
-  esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_SLOW_MEM, ESP_PD_OPTION_OFF);
-  esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_FAST_MEM, ESP_PD_OPTION_OFF);
-  esp_sleep_pd_config(ESP_PD_DOMAIN_MAX, ESP_PD_OPTION_OFF);
   esp_deep_sleep_start();
 }
